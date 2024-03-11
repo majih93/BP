@@ -72,3 +72,76 @@ OCP 원칙은 함수형 개발의 설계에서 매주 중요하다. **버그 수
 - the ulitmate goal of OCP is **to write code that won't need to change when requirements change**
   - 조금 더 깊게 들어가면, 변경의 가능성이 큰 코드인지 아닌지 분류하는 것 부터 시작되어야 할 듯 하다. 그리고 변경 가능성이 큰 코드는 이런 부분을 더 신경써서 설계를 하는 경험 및 지식이 필요한 듯.
 - in functional programming, OCP typically translates to composition
+
+## L - LSP `Liskov Substitution Principle`, 리스코프 치환 원칙
+
+[The Liskov Substitution Principle (LSP) in Frontend](https://www.linkedin.com/pulse/liskov-substitution-principle-lsp-frontend-prithveesh-goel/)
+
+If S is a subtype of T, the objects of type T should be able to be replaced by objects of type S without altering the desired behavior of the program.
+
+프론트엔드 영역에서 리스코프 치환 원칙은 base component를 기반으로 만들어진 derived component는 어떤 상황에서도 앱을 터트리거나 의도하지 않은 동작이 없이 base component 를 대체할 수 있어야 함을 말한다.
+
+### 그러기 위해서는...
+
+derived component가 base component를 대체할 수 있기 위해서는...
+
+- should support same props, methods, expected behavior of the base component.
+- while adding some custom feature that the base component does not offer
+
+### 근데 이게 프론트엔드 코드 작성에 있어서 뭐가 좋은데??
+
+Base component로 만들어진 컴포넌트로 Base component를 대체할 수 있도록 구현함으로써,
+
+- 하나의 위계질서(base-derived로 이루어진 구조를 말하는 듯)로 이루어진 컴포넌트들은 서로 쉽게 상호교환될 수 있다.
+  - 그러므로, 재사용성, 모듈성 그리고 유지보수성 증대로 이어진다.
+- **이 원칙은 정해진 규칙/형태를 기반으로 하는 컴포넌트들을 만들도록 encourage하는 효과가 있다.**
+
+### LSP에 대한 흔한 오해
+
+**`LSP는 상속에 대한 원칙이다.`라는 것은 오해다.**
+
+상속은 컴포넌트 간 관계를 확립하는 하나의 방법일 뿐이다.
+
+LSP의 본질은 프로그램에 문제를 일으키지 않고 같은 위계에 속한 두 구성요소를 상호 교체할 수 있어야 한다이다.
+
+이는 interface나 composition에도 똑같이 적용됨을 의미한다.
+
+**`Base component는 무조건 항상 언제나 어떤 컨텍스트에서도 subcomponent와 상호교체될 수 있어야 한다.`는 오해다.**
+
+Base컴포넌트를 사용할 수 있는 컨텍스트에 한해서, subcomponent로 대체할 수 있어야 한다는 의미이다.
+
+Sub component가 컨텍스트 상 필요한 기능을 가지는 것은 가장 본질적인 형태의 LSP 원칙(Base component의 필수 구성 요소, 구조를 가지는)을 지키는 범위 내에서는 필요하다면 적용해야 한다.
+
+**`LSP는 꼭 지켜야하는 만고불변의 진리이자 절대원칙이다`는 오해다.**
+
+엄격한 규칙이라기 보다는, 가이드라인으로 이해되어야 한다.
+
+이를 지키기 위해서 노력하는 것이 코드 품질 개선에 도움이 되는 것은 맞지만, 상황에 따라서 적절하지 않을수도 있고 더 나은 접근법들이 있을 수 있다.
+
+`It is essential to assess the trade-offs and consider practical implications`
+
+### AHA Point
+
+`This principle encourages the creation of components that follow a consistent contract, making it easier to reason about and work with different components throughout the application.`
+
+컴포넌트를 맞춰서 잘 만들면 좋다 정도로만 어렴풋이 생각하고 있었는데, 그렇게 해야되는 이유 중 하나는 바로 일관성 있는 코드 작성, 코드 형태에 있다는 점을 명시적으로 읽으니 느낌이 조금 다르다.
+
+왜? 왜 비슷한 컴포넌트를 기본 구조를 가진 컴포넌트를 확장하는 형태로 작성하는게 좋은데? 라고 했을 때 오늘 전까지는 이렇게 대답했지 싶다.
+
+- 코드 이해하기가 더 좋아서요.
+- 그게 그냥 더 좋아보여서요....
+- 그냥 남들이 그게 좋다고 하던데...
+
+하지만 그 이면에는 이런 구체적인 이유들이 존재했다는 점
+
+- 필요한 경우에 특정 컴포넌트를 같은 hierarchy에 존재하는 컴포넌트로 상대적으로 쉽게 교체할 수 있다.
+- 특정 컴포넌트가 가장 기본적으로 수행해야되는 기능에 대해서 이해할 수 있다.
+- 기준이 되는 코드가 존재하기 때문에, 그 코드를 확장하는 형태로 코드를 작성할 수 있다.
+  - 기본 기능이 깨지지 않을 가능성이 커진다.
+  - 기능 추가에 소요되는 시간이 줄어든다.
+  - 특정 컴포넌트를 사용할 때, 예측 가능한 base가 존재한다.
+  - 코드를 수정할 때 함께 수정해야되는 일이 생긴다면 비교적 더 간편하고 안정적이다.
+- 새롭게 추가된 기능/UI가 기본적으로 갖춰야할 형태를 갖추고 있기 때문에 일관된 UXUI를 제공하는데 도움이 된다.
+- 협업하는 사람들이 서로 다른 이해를 기반으로 상황에 맞지 않거나 기존 코드베이스와 결이 다른 코드를 작성하는 것을 방지할 수 있다.
+- 테스팅
+  - derived component는 base component에 해당되는 테스트케이스를 기반으로 테스팅이 가능하다.
